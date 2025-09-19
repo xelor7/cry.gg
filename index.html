@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVGA 6 - Premium Gaming Emulator | cry.gg</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --matte-black: #0a0a0a;
+            --dark-gray: #151515;
+            --glass-bg: rgba(20, 20, 20, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-red: #ff2a2a;
+            --accent-dark-red: #8b0000;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --transition-slow: 0.5s ease;
+            --transition-fast: 0.3s ease;
+            --discord-blurple: #5865F2;
+            --discord-yellow: #FEE75C;
+            --discord-fuchsia: #EB459E;
+            --youtube-red: #FF0000;
+            --instagram-purple: #E1306C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--matte-black);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(25, 25, 25, 0.8) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(30, 0, 0, 0.6) 0%, transparent 20%);
+        }
+
+        /* Premium Glow Effects */
+        h1, h2, h3, h4, h5, h6, p, span, a, button {
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        /* Glassmorphism Base Style */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 
+                0 4px 30px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 0, 0, 0.05),
+                0 0 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .glass:hover {
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 0, 0, 0.1),
+                0 0 30px rgba(255, 0, 0, 0.2);
+        }
+
+        /* Enhanced Glass Effect */
+        .glass-effect {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(16px) saturate(200%);
+            -webkit-backdrop-filter: blur(16px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 0, 0, 0.1),
+                0 0 30px rgba(255, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: var(--transition-slow);
+        }
+
+        .glass-effect:hover::before {
+            left: 100%;
+        }
+
+        .glow-hover:hover {
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 0, 0, 0.2),
+                0 0 40px rgba(255, 0, 0, 0.3);
+            transform: translateY(-8px) scale(1.03);
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-red);
+            position: relative;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            animation: red-pulse 3s ease infinite;
+        }
+
+        @keyframes red-pulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.6); }
+        }
+
+        .logo-text::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+            animation: sweep 2.5s infinite;
+        }
+
+        @keyframes sweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .logo-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .chat-bot-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, var(--accent-dark-red), var(--accent-red));
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .chat-bot-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition-slow);
+        }
+
+        .chat-bot-btn:hover::before {
+            left: 100%;
+        }
+
+        .chat-bot-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 2px;
+            width: 100%;
+            background: var(--text-primary);
+            transition: var(--transition-fast);
+            transform-origin: center;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        .hamburger:hover span {
+            background: var(--accent-red);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            padding: 80px 20px 20px;
+            z-index: 900;
+            transition: var(--transition-slow);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(255, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar.open {
+            left: 0;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .sidebar-item {
+            padding: 15px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-primary);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+            transition: var(--transition-slow);
+        }
+
+        .sidebar-item:hover::before {
+            left: 100%;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 0, 0, 0.05);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+            transform: translateX(5px);
+        }
+
+        .sidebar-item i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+            color: var(--accent-red);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 100px 5% 50px;
+            min-height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease forwards 0.5s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            display: inline-block;
+            color: var(--accent-red);
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            animation: red-pulse 3s ease infinite;
+        }
+
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+            animation: sweep 3s infinite;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .version {
+            color: var(--accent-red);
+            font-weight: 600;
+            margin: 10px 0;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            background: rgba(255, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Download Cards */
+        .downloads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .download-card {
+            padding: 30px;
+            transition: var(--transition-fast);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: calc(0.2s * var(--i));
+        }
+
+        .download-card:nth-child(1) { --i: 1; }
+        .download-card:nth-child(2) { --i: 2; }
+        .download-card:nth-child(3) { --i: 3; }
+
+        .download-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 0, 0, 0.2);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-red);
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+        }
+
+        .download-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .glass-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, var(--accent-dark-red), var(--accent-red));
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .glass-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition-slow);
+        }
+
+        .glass-button:hover::before {
+            left: 100%;
+        }
+
+        .glass-button:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Special Effects for Windows Card */
+        .glass-effect.glow-hover {
+            padding: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(30, 30, 30, 0.6);
+            animation: cardPulse 4s infinite ease-in-out;
+        }
+
+        @keyframes cardPulse {
+            0%, 100% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 0, 0, 0.1), 0 0 20px rgba(255, 0, 0, 0.1); }
+            50% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 0, 0, 0.2), 0 0 30px rgba(255, 0, 0, 0.3); }
+        }
+
+        .animated-gradient {
+            background: linear-gradient(45deg, #ff2a2a, #ff6b6b, #ff2a2a);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientMove 3s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glowing-text {
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .glowing-text::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+            animation: sweep 3s infinite;
+        }
+
+        /* Wallpaper Section */
+        .wallpapers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .wallpaper-item {
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            height: 200px;
+            transition: var(--transition-fast);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: calc(0.1s * var(--i));
+        }
+
+        .wallpaper-item:nth-child(1) { --i: 1; }
+        .wallpaper-item:nth-child(2) { --i: 2; }
+        .wallpaper-item:nth-child(3) { --i: 3; }
+        .wallpaper-item:nth-child(4) { --i: 4; }
+        .wallpaper-item:nth-child(5) { --i: 5; }
+        .wallpaper-item:nth-child(6) { --i: 6; }
+
+        .wallpaper-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-slow);
+        }
+
+        .wallpaper-item:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .wallpaper-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .wallpaper-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 15px;
+            opacity: 0;
+            transition: var(--transition-fast);
+        }
+
+        .wallpaper-item:hover .wallpaper-overlay {
+            opacity: 1;
+        }
+
+        .wallpaper-download {
+            display: block;
+            text-align: center;
+            padding: 8px 15px;
+            background: var(--accent-red);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: var(--transition-fast);
+        }
+
+        .wallpaper-download:hover {
+            background: var(--accent-dark-red);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        /* Author Profile */
+        .author-section {
+            display: none;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .author-card {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .author-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(88, 101, 242, 0.1), 
+                rgba(254, 231, 92, 0.1), 
+                rgba(235, 69, 158, 0.1));
+            background-size: 400% 100%;
+            z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .author-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid transparent;
+            animation: avatar-glow 3s ease infinite;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .author-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(255, 0, 0, 0.7);
+        }
+
+        @keyframes avatar-glow {
+            0% { 
+                box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+                border-color: rgba(255, 0, 0, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 0, 0, 0.8), 0 0 60px rgba(255, 0, 0, 0.6);
+                border-color: rgba(255, 0, 0, 0.6);
+            }
+            100% { 
+                box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+                border-color: rgba(255, 0, 0, 0.3);
+            }
+        }
+
+        .author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .author-avatar:hover img {
+            filter: brightness(1.1);
+        }
+
+        .author-name {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-red);
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            animation: red-pulse 3s ease infinite;
+        }
+
+        .author-badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .badge:hover {
+            transform: scale(1.2);
+        }
+
+        .badge:nth-child(1) { 
+            background: var(--youtube-red);
+            animation-delay: 0.2s;
+        }
+        .badge:nth-child(2) { 
+            background: var(--instagram-purple);
+            animation-delay: 0.4s;
+        }
+        .badge:nth-child(3) { 
+            background: var(--discord-blurple);
+            animation-delay: 0.6s;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .author-bio {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .author-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            box-shadow: 0 0 10px var(--accent-red);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+
+        /* Discord Profile Banner */
+        .discord-banner {
+            height: 120px;
+            background: linear-gradient(90deg, var(--discord-blurple), var(--discord-yellow), var(--discord-fuchsia));
+            background-size: 300% 100%;
+            border-radius: 16px 16px 0 0;
+            margin: -40px -40px 20px -40px;
+            animation: gradientFlow 10s ease infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .discord-banner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5));
+        }
+
+        /* Chat Bot Modal - Original Theme with Breathing Glow */
+        .chat-modal {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 380px;
+            height: 500px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            animation: breathe 3s infinite ease-in-out;
+        }
+
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.7), 0 0 50px rgba(255, 0, 0, 0.5); }
+        }
+
+        .chat-modal.open {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+            animation: modalAppear 0.5s ease, breathe 3s infinite ease-in-out;
+        }
+
+        @keyframes modalAppear {
+            0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: rgba(255, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .chat-close:hover {
+            color: var(--accent-red);
+            transform: rotate(90deg);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            animation: messageIn 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            background: rgba(255, 0, 0, 0.1);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .user-message {
+            background: rgba(255, 0, 0, 0.2);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-typing {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 12px 16px;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 18px;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            margin-top: 5px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid rgba(255, 0, 0, 0.1);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            outline: none;
+            transition: var(--transition-fast);
+        }
+
+        .chat-input input:focus {
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.3);
+        }
+
+        .chat-input button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, var(--accent-dark-red), var(--accent-red));
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .chat-input button:hover {
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        /* Quick Replies */
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-reply {
+            padding: 6px 12px;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 16px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .quick-reply:hover {
+            background: rgba(255, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Text Animation Styles */
+        .sweep {
+            position: relative;
+            display: inline-block;
+            color: var(--accent-red);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .sweep::before {
+            content: attr(data-text);
+            position: absolute;
+            inset: 0;
+            color: transparent;
+            background: linear-gradient(60deg, transparent 30%, rgba(255, 255, 255, 0.95) 50%, transparent 70%);
+            background-size: 220% 100%;
+            background-position: 0% 0%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: sweep 3.2s ease-in-out infinite alternate;
+            filter: blur(0.2px);
+            pointer-events: none;
+        }
+
+        @keyframes sweep {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0 20px 10px;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-red);
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+            animation: sweep 3s infinite;
+        }
+
+        /* Samurai Background for Profile */
+        .samurai-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1583237818709-97f5e5f637d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+            z-index: -2;
+            border-radius: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .downloads-grid, .wallpapers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-modal {
+                width: 90%;
+                right: 5%;
+                bottom: 20px;
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .sidebar {
+                width: 250px;
+                left: -250px;
+            }
+            
+            .nav-right {
+                gap: 10px;
+            }
+            
+            .chat-bot-btn span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar glass">
+        <div class="logo">
+            <div class="logo-text">EVGA 6</div>
+            <span class="logo-subtitle">cry.gg</span>
+        </div>
+        <div class="nav-right">
+            <button class="chat-bot-btn" id="chatBotBtn">
+                <i class="fas fa-robot"></i>
+                <span>AI Assistant</span>
+            </button>
+            <div class="hamburger" id="sidebarToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <a href="#" class="sidebar-item" data-section="home">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="sidebar-item" data-section="author">
+            <i class="fas fa-user"></i>
+            <span>Author</span>
+        </a>
+        <a href="#" class="sidebar-item" data-section="wallpapers">
+            <i class="fas fa-image"></i>
+            <span>Wallpapers</span>
+        </a>
+        <a href="#" class="sidebar-item" data-section="downloads">
+            <i class="fas fa-download"></i>
+            <span>Downloads</span>
+        </a>
+        <a href="#" class="sidebar-item" data-section="contact">
+            <i class="fas fa-envelope"></i>
+            <span>Contact</span>
+        </a>
+    </div>
+
+    <!-- Chat Bot Modal -->
+    <div class="chat-modal glass" id="chatModal">
+        <div class="chat-header">
+            <h3><i class="fas fa-robot"></i> EVGA Assistant</h3>
+            <button class="chat-close" id="chatClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                Hello! I'm EVGA Assistant. How can I help you with our premium gaming emulator today?
+            </div>
+            <div class="quick-replies">
+                <div class="quick-reply" data-reply="system requirements">System Requirements</div>
+                <div class="quick-reply" data-reply="download help">Download Help</div>
+                <div class="quick-reply" data-reply="features">Features</div>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Type your message...">
+            <button id="chatSend"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1><span class="sweep" data-text="EVGA 6">EVGA 6</span></h1>
+            <div class="version">Version 6.12.120.1337</div>
+            <p>The ultimate emulation experience with premium performance and optimization</p>
+        </section>
+
+        <!-- Downloads Section -->
+        <section class="downloads-section">
+            <h2 class="section-title">Downloads</h2>
+            <div class="downloads-grid">
+                <div class="download-card glass-effect glow-hover" data-download="Emulators">
+                    <div class="card-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3><span class="sweep" data-text="Emulators">Emulators</span></h3>
+                    <p class="card-description">Complete suite of high-performance emulators for the ultimate gaming experience.</p>
+                    <a href="https://drive.usercontent.google.com/download?id=1l9cQQAvoRkqcHmihf41bt5gjlSIqwbyo&export=download&authuser=0&confirm=t&uuid=f41390ab-11cb-4d6e-8ced-6d6efc9d7363&at=AN8xHoocbZDnVWLrXl3BOSjQ74T2%3A1758160633340" target="_blank" class="glass-button" style="text-decoration: none;">
+    <i class="fas fa-download"></i>
+    Download Now
+</a>
+                </div>
+                
+                <div class="download-card glass-effect glow-hover" data-download="optimizationpack">
+                    <div class="card-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3><span class="sweep" data-text="Optimization Pack">Optimization Pack</span></h3>
+                    <p class="card-description">Enhance your system performance with our specially crafted optimization tools.</p>
+                    <button class="glass-button">
+                        <i class="fas fa-download"></i>
+                        Download Now
+                    </button>
+                </div>
+                
+                <!-- Special Windows Card with Enhanced Effects -->
+                <div class="download-card glass-effect glow-hover" data-download="windows">
+                    <div class="card-icon">
+                        <i class="fab fa-windows animated-gradient"></i>
+                    </div>
+                    <h3 class="glowing-text"><span class="sweep" data-text="Windows (Optimized)">Windows (Optimized)</span></h3>
+                    <p class="card-description">Optimized Windows configuration for gaming with enhanced performance and reduced latency.</p>
+                    <button class="glass-button">
+                        <i class="fas fa-download"></i>
+                        Download Now
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wallpapers Section -->
+        <section class="wallpapers-section" id="wallpapersSection">
+            <h2 class="section-title">Premium Wallpapers</h2>
+            <div class="wallpapers-grid">
+                <div class="wallpaper-item glass">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Gaming Wallpaper 1">
+                    <div class="wallpaper-overlay">
+                        <h4>Neon Genesis</h4>
+                        <a href="#" class="wallpaper-download">Download</a>
+                    </div>
+                </div>
+                <div class="wallpaper-item glass">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80" alt="Gaming Wallpaper 2">
+                    <div class="wallpaper-overlay">
+                        <h4>Cyber Realm</h4>
+                        <a href="#" class="wallpaper-download">Download</a>
+                    </div>
+                </div>
+                <div class="wallpaper-item glass">
+                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Gaming Wallpaper 3">
+                    <div class="wallpaper-overlay">
+                        <h4>Digital Dreams</h4>
+                        <a href="#" class="wallpaper-download">Download</a>
+                    </div>
+                </div>
+                <div class="wallpaper-item glass">
+                    <img src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Gaming Wallpaper 4">
+                    <div class="wallpaper-overlay">
+                        <h4>Code Matrix</h4>
+                        <a href="#" class="wallpaper-download">Download</a>
+                    </div>
+                </div>
+                <div class="wallpaper-item glass">
+                    <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1157&q=80" alt="Gaming Wallpaper 5">
+                    <div class="wallpaper-overlay">
+                        <h4>Retro Fusion</h4>
+                        <a href="#" class="wallpaper-download">Download</a>
+                    </div>
+                </div>
+                <div class="wallpaper-item glass">
+                    <img src="https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Gaming Wallpaper 6">
+                    <div class="wallpaper-overlay">
+                        <h4>Virtual Victory</h4>
+                        <a href="#" class="wallpaper-download">Download</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Author Section -->
+        <section class="author-section glass" id="authorSection">
+            <h2 class="section-title">Developer Profile</h2>
+            <div class="author-card">
+                <div class="samurai-bg"></div>
+                <div class="discord-banner"></div>
+                <div class="author-avatar">
+                    <img src="https://yt3.googleusercontent.com/RG80EB8veI-EwtCKH-F8sn34Q25Mr3CD-jIM5N9gzfRcaX1yMM1C9stUIbGPn6vhOlr2jXgMmg=s160-c-k-c0x00ffffff-no-rj" alt="Xelor">
+                </div>
+                <div class="author-badges">
+                    <div class="badge" onclick="window.open('https://www.youtube.com/@xelor7', '_blank')"><i class="fab fa-youtube"></i></div>
+                    <div class="badge" onclick="window.open('http://instagram.com/alanfluxx', '_blank')"><i class="fab fa-instagram"></i></div>
+                    <div class="badge"><i class="fab fa-discord"></i></div>
+                </div>
+                <h2 class="author-name"><span class="sweep" data-text="@xelor">@xelor</span></h2>
+                <p class="author-bio">Lead Developer and Creator of EVGA 6. Passionate about creating high-performance emulation software with a focus on optimization and user experience.</p>
+                <div class="author-status">
+                    <div class="status-indicator"></div>
+                    <span>Online - Developing awesome stuff</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#ff2a2a" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#ff2a2a",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    }
+                },
+                retina_detect: true
+            });
+        });
+
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const authorSection = document.getElementById('authorSection');
+        const wallpapersSection = document.getElementById('wallpapersSection');
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        const chatBotBtn = document.getElementById('chatBotBtn');
+        const chatModal = document.getElementById('chatModal');
+        const chatClose = document.getElementById('chatClose');
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+        const chatMessages = document.getElementById('chatMessages');
+        const quickReplies = document.querySelectorAll('.quick-reply');
+
+        // Sidebar Toggle
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            sidebarToggle.classList.toggle('active');
+        });
+
+        // Chat Bot Toggle
+        chatBotBtn.addEventListener('click', () => {
+            chatModal.classList.toggle('open');
+        });
+
+        chatClose.addEventListener('click', () => {
+            chatModal.classList.remove('open');
+        });
+
+        // Quick Replies
+        quickReplies.forEach(reply => {
+            reply.addEventListener('click', () => {
+                const replyText = reply.getAttribute('data-reply');
+                addMessage(replyText, 'user');
+                
+                setTimeout(() => {
+                    botResponse(replyText);
+                }, 1000);
+            });
+        });
+
+        // Chat Functionality
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                addMessage(message, 'user');
+                chatInput.value = '';
+                
+                // Auto reply after a short delay
+                setTimeout(() => {
+                    botResponse(message);
+                }, 1000);
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messageEl = document.createElement('div');
+            messageEl.classList.add('message');
+            messageEl.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+            messageEl.textContent = text;
+            chatMessages.appendChild(messageEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function botResponse(userMessage) {
+            // Show typing indicator
+            const typingEl = document.createElement('div');
+            typingEl.classList.add('message-typing');
+            typingEl.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatMessages.appendChild(typingEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Process message and provide response
+            setTimeout(() => {
+                chatMessages.removeChild(typingEl);
+                
+                let response = "";
+                const lowerMessage = userMessage.toLowerCase();
+                
+                if (lowerMessage.includes("system requirement") || lowerMessage.includes("spec")) {
+                    response = "EVGA 6 requires Windows 10/11, 8GB RAM minimum (16GB recommended), 10GB storage space, and a DirectX 12 compatible GPU. For optimal performance, we recommend an SSD and a modern multi-core processor.";
+                } else if (lowerMessage.includes("download") || lowerMessage.includes("install")) {
+                    response = "To download EVGA 6, select your preferred package from the Downloads section. The installation process is automated - just run the installer and follow the prompts. Make sure to disable any antivirus temporarily as it may flag our optimization components.";
+                } else if (lowerMessage.includes("feature") || lowerMessage.includes("what can it do")) {
+                    response = "EVGA 6 features: High-performance emulation, real-time optimization, custom resolution support, FPS unlocking, reduced input lag, custom texture packs, save state functionality, and controller support with customization.";
+                } else if (lowerMessage.includes("support") || lowerMessage.includes("help")) {
+                    response = "For support, please join our Discord community or check the knowledge base on our website. Most common issues can be resolved by updating graphics drivers and ensuring your system meets the minimum requirements.";
+                } else if (lowerMessage.includes("cost") || lowerMessage.includes("price") || lowerMessage.includes("free")) {
+                    response = "EVGA 6 offers a free tier with basic functionality. Our premium version is available for $9.99/month or $89.99/year, which includes priority support, early access to features, and enhanced optimization profiles.";
+                } else {
+                    response = "I can help you with information about system requirements, downloading/installing EVGA 6, features, troubleshooting, and pricing. What would you like to know?";
+                }
+                
+                addMessage(response, 'bot');
+                
+                // Add quick replies after response
+                const quickRepliesEl = document.createElement('div');
+                quickRepliesEl.classList.add('quick-replies');
+                quickRepliesEl.innerHTML = `
+                    <div class="quick-reply" data-reply="system requirements">System Requirements</div>
+                    <div class="quick-reply" data-reply="download help">Download Help</div>
+                    <div class="quick-reply" data-reply="features">Features</div>
+                `;
+                chatMessages.appendChild(quickRepliesEl);
+                
+                // Reattach event listeners to new quick replies
+                document.querySelectorAll('.quick-reply').forEach(reply => {
+                    reply.addEventListener('click', () => {
+                        const replyText = reply.getAttribute('data-reply');
+                        addMessage(replyText, 'user');
+                        
+                        setTimeout(() => {
+                            botResponse(replyText);
+                        }, 1000);
+                    });
+                });
+            }, 1500);
+        }
+
+        // Sidebar Navigation
+        sidebarItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = item.getAttribute('data-section');
+                
+                // Hide all sections first
+                document.querySelectorAll('.author-section').forEach(sec => {
+                    sec.style.display = 'none';
+                });
+                wallpapersSection.style.display = 'none';
+                
+                // Show the selected section
+                if (section === 'author') {
+                    authorSection.style.display = 'block';
+                    window.scrollTo({
+                        top: authorSection.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                } else if (section === 'wallpapers') {
+                    wallpapersSection.style.display = 'block';
+                    window.scrollTo({
+                        top: wallpapersSection.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                } else if (section === 'home') {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                // Close sidebar on mobile
+                if (window.innerWidth < 768) {
+                    sidebar.classList.remove('open');
+                    sidebarToggle.classList.remove('active');
+                }
+            });
+        });
+
+        // Add subtle animation to elements on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.download-card, .author-card, .wallpaper-item');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        }
+
+        // Initialize scroll animation
+        window.addEventListener('scroll', animateOnScroll);
+        // Trigger once on load
+        setTimeout(animateOnScroll, 1000);
+    </script>
+</body>
+</html>
